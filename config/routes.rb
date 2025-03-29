@@ -8,4 +8,6 @@ Rails.application.routes.draw do
     registrations: 'users/registrations',
     sessions: 'users/sessions'
   }, defaults: { format: :json }
+
+  resources :events, only: [:index, :show, :create, :update, :destroy]
 end

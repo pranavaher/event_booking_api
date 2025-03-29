@@ -3,5 +3,7 @@ class EventOrganizer < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: JwtRevocationStrategy
 
+  has_many :events, dependent: :destroy
+
   validates :name, presence: true
 end
