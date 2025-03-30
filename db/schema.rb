@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_30_040706) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_30_123300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,7 +18,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_30_040706) do
     t.bigint "user_id", null: false
     t.bigint "ticket_id", null: false
     t.integer "quantity", default: 1, null: false
-    t.decimal "total_price", precision: 10, scale: 2, null: false
+    t.float "total_price", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ticket_id"], name: "index_bookings_on_ticket_id"
@@ -55,7 +55,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_30_040706) do
   create_table "tickets", force: :cascade do |t|
     t.bigint "event_id", null: false
     t.string "ticket_type", null: false
-    t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
+    t.float "price", default: 0.0, null: false
     t.integer "quantity_available", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
