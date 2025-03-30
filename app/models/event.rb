@@ -1,6 +1,8 @@
 class Event < ApplicationRecord
   belongs_to :event_organizer
-
+  has_many :tickets, dependent: :destroy
+  has_many :bookings, through: :tickets, dependent: :destroy
+  
   validates :name, :start_time, :end_time, :venue, presence: true
   validate :start_time_must_be_before_end_time
 
