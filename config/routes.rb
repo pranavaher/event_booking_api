@@ -9,5 +9,9 @@ Rails.application.routes.draw do
     sessions: 'users/sessions'
   }, defaults: { format: :json }
 
-  resources :events, only: [:index, :show, :create, :update, :destroy]
+  resources :events, only: [:index, :show, :create, :update, :destroy] do
+    resources :tickets, only: [:index, :show, :create, :update, :destroy]
+  end
+
+  resources :bookings, only: [:index, :show, :create]
 end
