@@ -12,6 +12,6 @@ Rails.application.routes.draw do
   resources :events, only: [:index, :show, :create, :update, :destroy] do
     resources :tickets, only: [:index, :show, :create, :update, :destroy]
   end
-
+  get 'get_all_tickets', to: 'tickets#get_all_tickets'
   resources :bookings, only: [:index, :show, :create]
 end

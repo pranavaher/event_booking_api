@@ -1,11 +1,16 @@
 class TicketsController < ApplicationController
-  before_action :authenticate_event_organizer!, except: [:index, :show]
-  before_action :set_event
+  before_action :authenticate_event_organizer!, except: [:index, :show, :get_all_tickets]
+  before_action :set_event, except: [:get_all_tickets]
   before_action :set_ticket, only: [:show, :update, :destroy]
   before_action :authorize_event_organizer!, only: [:create, :update, :destroy]
 
   def index
     tickets = @event.tickets
+    render json: tickets
+  end
+
+  def get_all_tickets
+    tickets = Ticket.joins(:event).select('tickets.id, events.name AS event_name, tickets.ticket_type, tickets.price, tickets.quantity_available')
     render json: tickets
   end
 
