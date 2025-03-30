@@ -19,6 +19,9 @@ module EventBookingApi
     config.session_store :cookie_store, key: '_interslice_session'
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use config.session_store, config.session_options
+    config.autoload_paths += %W(#{config.root}/app/models/observers)
+    config.active_record.observers = :booking_observer, :event_observer
+
 
     # Configuration for the application, engines, and railties goes here.
     #
