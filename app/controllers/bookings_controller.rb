@@ -57,8 +57,10 @@ class BookingsController < ApplicationController
   private
 
   def authenticate_user_or_event_organizer!
-    unless current_user || current_event_organizer
-      render json: { error: "Unauthorized access" }, status: :unauthorized
+    if current_user || current_event_organizer
+      return
+    else
+      render json: { error: "You need to sign in before continuing" }, status: :unauthorized
     end
   end
 
@@ -67,12 +69,26 @@ class BookingsController < ApplicationController
 
     if @booking.nil?
       render json: { error: "Booking not found" }, status: :not_found
-    elsif current_user && @booking.user_id == current_user.id
+    elsif current_user
+      # Users can only see their own bookings
+      unless @booking.user_id == current_user.id
+        render json: { error: "You are not authorized as this is not your booking" }, status: :forbidden
+      end
+    elsif current_event_organizer
+      # Event organizers can only see bookings for their own events
+      unless @booking.ticket.event.event_organizer_id == current_event_organizer.id
+        render json: { error: "You are not authorized as this booking does not belong to ticket/event that you created" }, status: :forbidden
+      end
+    end
+  end
+
+  def authenticate_user!
+    if current_user
       return
-    elsif current_event_organizer && @booking.ticket.event.event_organizer_id == current_event_organizer.id
-      return
+    elsif current_event_organizer
+      render json: { error: "Event organizers cannot create, update, or delete bookings" }, status: :forbidden
     else
-      render json: { error: "Unauthorized access" }, status: :forbidden
+      render json: { error: "You need to sign in before continuing" }, status: :unauthorized
     end
   end
 
