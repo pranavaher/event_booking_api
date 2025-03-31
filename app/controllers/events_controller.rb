@@ -45,9 +45,19 @@ class EventsController < ApplicationController
     render json: { error: "Event not found." }, status: :not_found unless @event
   end
 
+  def authenticate_event_organizer!
+    if current_event_organizer
+      return
+    elsif current_user
+      render json: { error: 'Only event organizers can manage events' }, status: :forbidden
+    else
+      render json: { error: 'You need to sign in before continuing' }, status: :unauthorized
+    end
+  end
+
   def authorize_event_organizer!
-    unless @event.event_organizer == current_event_organizer
-      render json: { error: "Unauthorized to perform this action." }, status: :forbidden
+    unless current_event_organizer == @event.event_organizer
+      render json: { error: 'You are not creator of this event to manage' }, status: :forbidden
     end
   end
 
