@@ -57,9 +57,24 @@ class TicketsController < ApplicationController
     render json: { error: 'Ticket not found for this event' }, status: :not_found if @ticket.nil?
   end
 
+  def authenticate_event_organizer!
+    if current_event_organizer
+      return
+    elsif current_user
+      render json: { error: 'Only event organizers can manage tickets' }, status: :forbidden
+    else
+      render json: { error: 'You need to sign in before continuing' }, status: :unauthorized
+    end
+  end
+  
+
   def authorize_event_organizer!
+    unless current_event_organizer
+      return render json: { error: 'Only event organizers can manage tickets' }, status: :forbidden
+    end
+
     unless current_event_organizer == @event.event_organizer
-      render json: { error: 'You are unauthorized to manage tickets for this event' }, status: :forbidden
+      render json: { error: 'You are not creator of this event to manage tickets' }, status: :forbidden
     end
   end
 
